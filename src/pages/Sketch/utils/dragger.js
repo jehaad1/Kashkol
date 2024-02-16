@@ -5,11 +5,9 @@ import {
   setSide,
   tool,
   setIsDragging,
-  setHistory,
 } from "../App";
 
 export const [onDragger, setOnDragger] = createSignal(false);
-
 export function createDragger(x, y, width, height, rotation, type) {
   if (type === "circle") {
     x = x - width / 2;
