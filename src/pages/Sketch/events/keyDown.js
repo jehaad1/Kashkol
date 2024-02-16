@@ -104,6 +104,50 @@ export default function handleKeyDown(e) {
     }
     deleteDragger();
     setSelectedObjects(null);
+  } else if (
+    e.key === "ArrowUp" ||
+    e.key === "ArrowDown" ||
+    e.key === "ArrowLeft" ||
+    e.key === "ArrowRight"
+  ) {
+    e.preventDefault();
+    if (isLocked()) return;
+    const objs = selectedObjects();
+    if (!objs) return;
+    if (Array.isArray(objs)) {
+      const newObjs = objs.map((obj) => {
+        let x = obj.x;
+        let y = obj.y;
+        if (obj.translate) {
+          x = obj.translate.x;
+          y = obj.translate.y;
+        }
+        if (e.key === "ArrowUp") y -= 1;
+        if (e.key === "ArrowDown") y += 1;
+        if (e.key === "ArrowLeft") x -= 1;
+        if (e.key === "ArrowRight") x += 1;
+        myCanvas.updateObject(obj.id, { x, y });
+        return { ...obj, x, y };
+      });
+      setSelectedObjects(newObjs);
+      setObjects(myCanvas.getObjects().filter((obj) => !isNaN(obj.id)));
+      localStorage.setItem("objects", JSON.stringify(objects()));
+      return;
+    }
+    let x = objs.x;
+    let y = objs.y;
+    if (objs.translate) {
+      x = objs.translate.x;
+      y = objs.translate.y;
+    }
+    if (e.key === "ArrowUp") y -= 1;
+    if (e.key === "ArrowDown") y += 1;
+    if (e.key === "ArrowLeft") x -= 1;
+    if (e.key === "ArrowRight") x += 1;
+    myCanvas.updateObject(objs.id, { x, y });
+    setSelectedObjects({ ...objs, x, y });
+    setObjects(myCanvas.getObjects().filter((obj) => !isNaN(obj.id)));
+    localStorage.setItem("objects", JSON.stringify(objects()));
   }
 }
 
@@ -202,5 +246,3 @@ function redo(e) {
   );
   localStorage.setItem("objects", JSON.stringify(objects()));
 }
-
-// arrows for moving
