@@ -20,7 +20,6 @@ import onMouseClick from "./functions/mouseClick";
 
 export const [clearCanvas, setClearCanvas] = createSignal(null);
 export const [tool, setTool] = createSignal("hand");
-// export const [clickId, setClickId] = createSignal(null);
 export const [isDrawing, setIsDrawing] = createSignal(false);
 export const [isTyping, setIsTyping] = createSignal(false);
 export const [isLocked, setIsLocked] = createSignal(
@@ -145,7 +144,6 @@ export default function App() {
     let clickDate, isMoved;
 
     myCanvas.on(isMobile ? "touchstart" : "mousedown", (e) => {
-      // setClickId(Math.floor(Math.random() * 1000000));
       clickDate = Date.now();
       if (isLocked()) return;
       // if (focused()) {

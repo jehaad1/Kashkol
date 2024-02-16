@@ -19,17 +19,13 @@ import {
   setSelectedObjects,
   setErasedObjects,
   isDragging,
-  // clickId,
-  setHistory,
 } from "../App";
 import getNewProps from "../utils/getNewProps";
 import moveObjects from "../utils/moveObjects";
 import getPath from "../utils/getPath";
 import { createSelection } from "../utils/selection";
 import { deleteDragger, drawDragger } from "../utils/dragger";
-import { createSignal } from "solid-js";
 
-// const [lastClickId, setLastClickId] = createSignal(null);
 export default function onMouseMove(x, y, mouseObjects) {
   if (tool() === "eraser") {
     setSelectedObjects(null);
@@ -189,18 +185,6 @@ export default function onMouseMove(x, y, mouseObjects) {
         }
         return newObj;
       });
-      // if (clickId() !== lastClickId()) {
-      //   setLastClickId(clickId());
-      //   setHistory((history) => {
-      //     const newHistory = [...history];
-      //     newHistory.push({
-      //       action: "update",
-      //       objects: objs,
-      //       beforeUpdateObjects: selectedObjects(),
-      //     });
-      //     return newHistory;
-      //   });
-      // }
       setSelectedObjects(objs);
       drawDragger(selectedObjects());
       return;
@@ -218,19 +202,6 @@ export default function onMouseMove(x, y, mouseObjects) {
       newObj.y += newY;
     }
 
-    // if (clickId() !== lastClickId()) {
-    //   setLastClickId(clickId());
-    //   console.log(newObj);
-    //   setHistory((history) => {
-    //     const newHistory = [...history];
-    //     newHistory.push({
-    //       action: "update",
-    //       objects: [newObj],
-    //       beforeUpdateObjects: [selectedObjects()],
-    //     });
-    //     return newHistory;
-    //   });
-    // }
     setSelectedObjects(newObj);
   } else if (tool() === "pencil" || tool() === "highlighter") {
     setStrokePoints((points) => [...points, [x, y]]);

@@ -15,6 +15,7 @@ import {
   setErasedObjects,
   isDrawing,
   setHistory,
+  selectedObjects,
 } from "../App";
 import moveObjects from "../utils/moveObjects";
 
@@ -49,19 +50,48 @@ export default function onMouseUp(x, y) {
     setCurrentObject(null);
     return;
   } else if (tool() === "cursor") {
-    // if (currentObject() && currentObject() !== "canvas") {
-    //   setHistory((history) => {
-    //     let newHistory = [...history];
-    //     let lastAction = newHistory.pop();
-    //     if (lastAction?.action === "update") {
-    //       lastAction.objects = Array.isArray(currentObject())
-    //         ? currentObject()
-    //         : [currentObject()];
-    //     }
-    //     console.log(lastAction, newHistory);
-    //     return [...newHistory, lastAction];
-    //   });
-    // }
+    if (currentObject() && currentObject() !== "canvas") {
+      if (
+        !Array.isArray(currentObject()) &&
+        !Array.isArray(selectedObjects())
+      ) {
+        const x = currentObject().x;
+        const y = currentObject().y;
+        const newX = selectedObjects().x;
+        const newY = selectedObjects().y;
+        if (x !== newX || y !== newY) {
+          setHistory((history) => {
+            const newHistory = [...history];
+            newHistory.push({
+              action: "update",
+              objects: [selectedObjects()],
+              beforeUpdateObjects: [currentObject()],
+            });
+            return newHistory;
+          });
+        }
+      } else {
+        if (
+          currentObject().some(
+            (obj) =>
+              selectedObjects().some(
+                (selectedObj) =>
+                  selectedObj.x !== obj.x || selectedObj.y !== obj.y
+              )
+          )
+        ) {
+          setHistory((history) => {
+            const newHistory = [...history];
+            newHistory.push({
+              action: "update",
+              objects: selectedObjects(),
+              beforeUpdateObjects: currentObject(),
+            });
+            return newHistory;
+          });
+        }
+      }
+    }
     myCanvas?.deleteObject("selection");
     myCanvas?.deleteObject("selectionBorder");
     setStartPoint([]);

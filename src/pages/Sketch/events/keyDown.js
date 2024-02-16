@@ -203,5 +203,4 @@ function redo(e) {
   localStorage.setItem("objects", JSON.stringify(objects()));
 }
 
-// all the history is working expect for moving objects
 // arrows for moving
