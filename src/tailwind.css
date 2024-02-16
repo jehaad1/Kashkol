@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "IBM light";
+  src: url("../Fonts/IBMPlexSansArabic-Light.ttf");
+}
+
+@font-face {
+  font-family: "IBM regular";
+  src: url("../Fonts/IBMPlexSansArabic-Regular.ttf");
+}
+
+@font-face {
+  font-family: "IBM medium";
+  src: url("../Fonts/IBMPlexSansArabic-Medium.ttf");
+}
+
+@font-face {
+  font-family: "IBM bold";
+  src: url("../Fonts/IBMPlexSansArabic-Bold.ttf");
+}
+
+@font-face {
+  font-family: "IBM semibold";
+  src: url("../Fonts/IBMPlexSansArabic-SemiBold.ttf");
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+* {
+  font-family: "IBM regular";
+  font-weight: normal;
+}
+
+.font-light {
+  font-family: "IBM light";
+}
+
+.font-medium {
+  font-family: "IBM medium";
+}
+
+.font-bold {
+  font-family: "IBM bold";
+}
+
+.font-semibold {
+  font-family: "IBM semibold";
+}
+
+.rtl {
+  direction: rtl;
+}
+
+button {
+  @apply outline-none select-none;
+}
+
+.button {
+  @apply border rounded py-1.5 px-3
+  flex items-center justify-center gap-3
+  outline-none select-none
+  cursor-pointer
+  transition-all;
+  font-family: "IBM Medium" !important;
+}
+
+.button.blue {
+  @apply text-blue-400 bg-blue-400/10 border-blue-400;
+}
+
+.button.red {
+  @apply text-red-400 bg-red-400/10 border-red-400;
+}
+
+.button.gray {
+  @apply border-neutral-500
+  bg-neutral-500 text-white-950;
+}
+
+.button.transparent {
+  @apply border border-darkcolor-50 dark:border-white-950
+  text-darkcolor-950 dark:text-white-950;
+}
+
+svg.animate-spin {
+  @apply hidden sm:inline;
+}
+
+.button svg:has(circle) {
+  @apply animate-spin h-5 w-5;
+}
+
+.button.blue svg {
+  @apply text-blue-400;
+}
+
+.button.red svg {
+  @apply text-red-400;
+}
+
+.button.gray svg {
+  @apply text-zinc-800 dark:text-white-950;
+}
+
+button[disabled] {
+  @apply opacity-70 cursor-not-allowed;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+}

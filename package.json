@@ -1,0 +1,29 @@
+{
+  "name": "solidbase",
+  "version": "0.0.0",
+  "description": "this project built with solidbase stack",
+  "scripts": {
+    "start": "vite --host",
+    "dev": "vite --host",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "solid-devtools": "^0.27.3",
+    "tailwindcss": "^3.3.2",
+    "vite": "^4.3.9",
+    "vite-plugin-solid": "^2.7.0"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.8.2",
+    "canvasflow": "^2.1.0",
+    "firebase": "^9.23.0",
+    "perfect-freehand": "^1.2.0",
+    "short-unique-id": "^5.0.3",
+    "solid-icons": "^1.0.11",
+    "solid-js": "^1.7.6"
+  }
+}

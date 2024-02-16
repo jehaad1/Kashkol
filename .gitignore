@@ -1,0 +1,6 @@
+.git
+node_modules
+dist
+.DS_store
+._*
+package-lock.json
