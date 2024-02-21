@@ -12,6 +12,7 @@ import {
   setSelectedObjects,
   selectedObjects,
   setErasedObjects,
+  setOnText,
 } from "../App";
 import { highlighterInterval, highlighterTimeout } from "./mouseUp";
 import getPath from "../utils/getPath";
@@ -60,53 +61,53 @@ export default function onMouseDown(x, y, mouseObjects) {
     deleteDragger();
   }
 
-  // if (tool() === "text") {
-  //   if (mouseObjects.find((o) => o.type === "text")) {
-  //     setOnText(true);
-  //     let object = mouseObjects.find((o) => o.type === "text");
-  //     setCurrentObject(object);
-  //     myCanvas.deleteObject(object.id);
-  //     textarea.value = object.text;
-  //     setStartPoint({ x: object.x, y: object.y });
-  //   } else
-  //     setCurrentObject({
-  //       id: newId(),
-  //       zIndex: newId(),
-  //       type: "text",
-  //       x: x,
-  //       y: y,
-  //       text: "",
-  //       fill: styleProps().fill,
-  //       font: {
-  //         size: styleProps().font.size,
-  //       },
-  //     });
-  //   setOnText(true);
-  //   setUpdateText(() => {
-  //     return function (text) {
-  //       setFocused(false);
-  //       setUpdateText(null);
-  //       setStartPoint({});
-  //       setOnText(false);
-  //       setTool("hand");
-  //       if (!text) {
-  //         setObjects((objects) =>
-  //           objects.filter((object) => object.id !== currentObject().id)
-  //         );
-  //       } else {
-  //         setCurrentObject((object) => ({ ...object, text }));
-  //         setObjects((objects) => [
-  //           ...objects.filter((object) => object.id !== currentObject().id),
-  //           currentObject(),
-  //         ]);
-  //       }
-  //       myCanvas.clearCanvas();
-  //       myCanvas.setObjects(objects());
-  //     };
-  //   });
-  //   setObjects((objects) => [...objects, currentObject()]);
-  //   myCanvas.setObject(currentObject());
-  // } else
+  if (tool() === "text") {
+    if (mouseObjects.find((o) => o.type === "text")) {
+      setOnText(true);
+      const object = mouseObjects.find((o) => o.type === "text");
+      setCurrentObject(object);
+      myCanvas.deleteObject(object.id);
+      textarea.value = object.text;
+      setStartPoint({ x: object.x, y: object.y });
+    } else
+      setCurrentObject({
+        id: newId(),
+        zIndex: newId(),
+        type: "text",
+        x: x,
+        y: y,
+        text: "",
+        fill: styleProps().fill,
+        font: {
+          size: styleProps().font.size,
+        },
+      });
+    setOnText(true);
+    setUpdateText(() => {
+      return function (text) {
+        setFocused(false);
+        setUpdateText(null);
+        setStartPoint({});
+        setOnText(false);
+        setTool("hand");
+        if (!text) {
+          setObjects((objects) =>
+            objects.filter((object) => object.id !== currentObject().id)
+          );
+        } else {
+          setCurrentObject((object) => ({ ...object, text }));
+          setObjects((objects) => [
+            ...objects.filter((object) => object.id !== currentObject().id),
+            currentObject(),
+          ]);
+        }
+        myCanvas.clearCanvas();
+        myCanvas.setObjects(objects());
+      };
+    });
+    setObjects((objects) => [...objects, currentObject()]);
+    myCanvas.setObject(currentObject());
+  }
   const id = newId();
   if (tool() === "pencil") {
     setStrokePoints([[x, y]]);

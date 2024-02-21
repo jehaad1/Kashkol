@@ -27,6 +27,7 @@ export const [isLocked, setIsLocked] = createSignal(
 );
 export const [isDragging, setIsDragging] = createSignal(false);
 export const [side, setSide] = createSignal("");
+export const [onText, setOnText] = createSignal("");
 export const [styleProps, setStyleProps] = createSignal({
   fill: "transparent",
   stroke: {

@@ -108,37 +108,37 @@ export function drawDragger(obj) {
   } else if (Array.isArray(obj)) {
     const biggestX = Math.max(
       ...obj.map((o) => {
-        if (obj.type === "line")
+        if (o.type === "line")
           return (o.from.x || 0) + (o.to.x || 0) + (o.translate?.x || 0);
-        if (obj.type === "circle") return (o.x - o.width) / 2;
+        if (o.type === "circle") return o.x + o.width / 2;
         return o.x + o.width;
       })
     );
     const biggestY = Math.max(
       ...obj.map((o) => {
-        if (obj.type === "line")
+        if (o.type === "line")
           return (o.from.y || 0) + (o.to.y || 0) + (o.translate?.y || 0);
-        if (obj.type === "circle") return (o.y - o.height) / 2;
+        if (o.type === "circle") return o.y + o.height / 2;
         return o.y + o.height;
       })
     );
     const smallestX = Math.min(
       ...obj.map((o) => {
-        if (obj.type === "line")
+        if (o.type === "line")
           return (
             (o.from.x < o.to.x ? o.from.x : o.to.x) + (o.translate?.x || 0)
           );
-        if (obj.type === "circle") return (o.x - o.width) / 2;
+        if (o.type === "circle") return o.x - o.width / 2;
         return o.x;
       })
     );
     const smallestY = Math.min(
       ...obj.map((o) => {
-        if (obj.type === "line")
+        if (o.type === "line")
           return (
             (o.from.y < o.to.y ? o.from.y : o.to.y) + (o.translate?.y || 0)
           );
-        if (obj.type === "circle") return (o.y - o.height) / 2;
+        if (o.type === "circle") return o.y - o.height / 2;
         return o.y;
       })
     );
