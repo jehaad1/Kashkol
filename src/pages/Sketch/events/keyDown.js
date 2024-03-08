@@ -16,16 +16,28 @@ import {
   setIsDrawing,
   setObjects,
   setSelectedObjects,
+  setTool,
   tool,
 } from "../App";
 import { deleteDragger, drawDragger } from "../utils/dragger";
 import pasteObjects from "../functions/pasteObjects";
+import saveObjects from "../utils/saveObjects";
+import { zoomIn, zoomOut, resetZoom } from "../components/Bars/Zoombar";
+import { undo, redo } from "../components/Bars/Historybar";
 
 export default function handleKeyDown(e) {
   if (isTyping()) return;
   if (e.ctrlKey || e.metaKey) {
-    if (e.key === "+" || e.key === "=" || e.key === "-") e.preventDefault();
-    if (e.key === "c") {
+    if (e.key === "+" || e.key === "=") {
+      e.preventDefault();
+      return zoomIn();
+    } else if (e.key === "-") {
+      e.preventDefault();
+      return zoomOut();
+    } else if (e.key === "0") {
+      e.preventDefault();
+      return resetZoom();
+    } else if (e.key === "c") {
       e.preventDefault();
       const obj = selectedObjects();
       if (Array.isArray(obj)) {
@@ -57,6 +69,7 @@ export default function handleKeyDown(e) {
             });
           });
           setIsDrawing(false);
+          setTool("select");
           return;
         } else undo(e);
       }
@@ -71,7 +84,7 @@ export default function handleKeyDown(e) {
         setObjects((objs) => objs.filter((o) => o.id !== object.id));
         myCanvas.deleteObject(object.id);
       });
-      localStorage.setItem("objects", JSON.stringify(objects()));
+      saveObjects();
       setHistory((history) => {
         const newHistory = [...history];
         newHistory.push({ action: "delete", objects: obj });
@@ -83,7 +96,7 @@ export default function handleKeyDown(e) {
     setObjects((objs) => objs.filter((o) => o.id !== obj.id));
     setSelectedObjects(null);
     myCanvas.deleteObject(obj.id);
-    localStorage.setItem("objects", JSON.stringify(objects()));
+    saveObjects();
     setHistory((history) => {
       const newHistory = [...history];
       newHistory.push({ action: "delete", objects: [obj] });
@@ -99,6 +112,7 @@ export default function handleKeyDown(e) {
           opacity: object.opacity || 1,
         });
       });
+      setTool("select");
       setIsDrawing(false);
       return;
     }
@@ -131,7 +145,8 @@ export default function handleKeyDown(e) {
       });
       setSelectedObjects(newObjs);
       setObjects(myCanvas.getObjects().filter((obj) => !isNaN(obj.id)));
-      localStorage.setItem("objects", JSON.stringify(objects()));
+      saveObjects();
+
       return;
     }
     let x = objs.x;
@@ -147,102 +162,6 @@ export default function handleKeyDown(e) {
     myCanvas.updateObject(objs.id, { x, y });
     setSelectedObjects({ ...objs, x, y });
     setObjects(myCanvas.getObjects().filter((obj) => !isNaN(obj.id)));
-    localStorage.setItem("objects", JSON.stringify(objects()));
+    saveObjects();
   }
-}
-
-function undo(e) {
-  e.preventDefault();
-  const lastAction = history()[currentAction()];
-  if (!lastAction) return;
-  if (lastAction.action === "delete") {
-    const objs = lastAction.objects;
-    myCanvas.setObjects(objs);
-    setObjects((objects) => [...objects, ...objs]);
-    // } else if (lastAction.action === "select") {
-    //   lastAction.objects.forEach((object) => {
-    //     myCanvas.updateObject(object.id, {
-    //       opacity: object.opacity || 1,
-    //     });
-    //   });
-    // } else if (lastAction.action === "unselect") {
-    //   lastAction.objects.forEach((object) => {
-    //     myCanvas.updateObject(object.id, {
-    //       opacity: object.opacity || 1,
-    //     });
-    //   });
-    setSelectedObjects(objs.length === 1 ? objs[0] : objs);
-  } else if (lastAction.action === "update") {
-    const objects = lastAction.beforeUpdateObjects;
-    myCanvas.setObjects(objects);
-    setObjects((objs) => {
-      return [
-        ...objs.filter((obj) => !objects.map((o) => o.id).includes(obj.id)),
-        ...objects,
-      ];
-    });
-    setSelectedObjects(objects.length === 1 ? objects[0] : objects);
-  } else if (lastAction.action === "add") {
-    const objIds = lastAction.objects.map((obj) => obj.id);
-    objIds.forEach((id) => {
-      myCanvas.deleteObject(id);
-    });
-    setObjects((objs) => {
-      return objs.filter((obj) => !objIds.includes(obj.id));
-    });
-    setSelectedObjects(null);
-    deleteDragger();
-  }
-  setCurrentAction((currentAction) =>
-    currentAction >= 0 ? currentAction - 1 : currentAction
-  );
-  localStorage.setItem("objects", JSON.stringify(objects()));
-}
-
-function redo(e) {
-  e.preventDefault();
-  const lastAction = history()[currentAction() + 1];
-  if (!lastAction) return;
-  if (lastAction.action === "add") {
-    const objs = lastAction.objects;
-    myCanvas.setObjects(objs);
-    setObjects((objects) => [...objects, ...objs]);
-    // } else if (lastAction.action === "select") {
-    //   lastAction.objects.forEach((object) => {
-    //     myCanvas.updateObject(object.id, {
-    //       opacity: object.opacity || 1,
-    //     });
-    //   });
-    // } else if (lastAction.action === "unselect") {
-    //   lastAction.objects.forEach((object) => {
-    //     myCanvas.updateObject(object.id, {
-    //       opacity: object.opacity || 1,
-    //     });
-    //   });
-    setSelectedObjects(objs.length === 1 ? objs[0] : objs);
-  } else if (lastAction.action === "update") {
-    const objects = lastAction.objects;
-    myCanvas.setObjects(objects);
-    setObjects((objs) => {
-      return [
-        ...objs.filter((obj) => !objects.map((o) => o.id).includes(obj.id)),
-        ...objects,
-      ];
-    });
-    setSelectedObjects(objects.length === 1 ? objects[0] : objects);
-  } else if (lastAction.action === "delete") {
-    const objIds = lastAction.objects.map((obj) => obj.id);
-    objIds.forEach((id) => {
-      myCanvas.deleteObject(id);
-    });
-    setObjects((objs) => {
-      return objs.filter((obj) => !objIds.includes(obj.id));
-    });
-    setSelectedObjects(null);
-    deleteDragger();
-  }
-  setCurrentAction((currentAction) =>
-    currentAction < history().length ? currentAction + 1 : currentAction
-  );
-  localStorage.setItem("objects", JSON.stringify(objects()));
 }

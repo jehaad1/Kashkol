@@ -83,24 +83,20 @@ export function drawDragger(obj) {
     if (obj) {
       if (obj.type === "line") {
         const x =
-          (obj.from.x > obj.to.x ? obj.to.x : obj.from.x) +
-          (obj.translate?.x || 0);
+          Math.min(obj.from.x || 0, obj.to.x || 0) + (obj.translate?.x || 0);
         const y =
-          (obj.from.y > obj.to.y ? obj.to.y : obj.from.y) +
-          (obj.translate?.y || 0);
+          Math.min(obj.from.y || 0, obj.to.y || 0) + (obj.translate?.y || 0);
         const x2 =
-          (obj.from.x < obj.to.x ? obj.to.x : obj.from.x) +
-          (obj.translate?.x || 0);
+          Math.max(obj.from.x || 0, obj.to.x || 0) + (obj.translate?.x || 0);
         const y2 =
-          (obj.from.y < obj.to.y ? obj.to.y : obj.from.y) +
-          (obj.translate?.y || 0);
+          Math.max(obj.from.y || 0, obj.to.y || 0) + (obj.translate?.y || 0);
         createDragger(x, y, x2, y2);
       } else
         createDragger(
-          obj.x,
-          obj.y,
-          obj.width,
-          obj.height,
+          obj.x + (obj.translate?.x || 0),
+          obj.y + (obj.translate?.y || 0),
+          obj.width + (obj.translate?.x || 0),
+          obj.height + (obj.translate?.y || 0),
           obj.rotation,
           obj.type
         );
@@ -109,15 +105,16 @@ export function drawDragger(obj) {
     const biggestX = Math.max(
       ...obj.map((o) => {
         if (o.type === "line")
-          return (o.from.x || 0) + (o.to.x || 0) + (o.translate?.x || 0);
+          return Math.max(o.from.x || 0, o.to.x || 0) + (o.translate?.x || 0);
         if (o.type === "circle") return o.x + o.width / 2;
         return o.x + o.width;
       })
     );
     const biggestY = Math.max(
       ...obj.map((o) => {
-        if (o.type === "line")
-          return (o.from.y || 0) + (o.to.y || 0) + (o.translate?.y || 0);
+        if (o.type === "line") {
+          return Math.max(o.from.y || 0, o.to.y || 0) + (o.translate?.y || 0);
+        }
         if (o.type === "circle") return o.y + o.height / 2;
         return o.y + o.height;
       })
@@ -125,9 +122,7 @@ export function drawDragger(obj) {
     const smallestX = Math.min(
       ...obj.map((o) => {
         if (o.type === "line")
-          return (
-            (o.from.x < o.to.x ? o.from.x : o.to.x) + (o.translate?.x || 0)
-          );
+          return Math.min(o.from.x || 0, o.to.x || 0) + (o.translate?.x || 0);
         if (o.type === "circle") return o.x - o.width / 2;
         return o.x;
       })
@@ -135,9 +130,7 @@ export function drawDragger(obj) {
     const smallestY = Math.min(
       ...obj.map((o) => {
         if (o.type === "line")
-          return (
-            (o.from.y < o.to.y ? o.from.y : o.to.y) + (o.translate?.y || 0)
-          );
+          return Math.min(o.from.y || 0, o.to.y || 0) + (o.translate?.y || 0);
         if (o.type === "circle") return o.y - o.height / 2;
         return o.y;
       })

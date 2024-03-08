@@ -1,4 +1,4 @@
-import { isLocked, setIsLocked, setSelectedObjects } from "../App";
+import { isLocked, setIsLocked, setSelectedObjects } from "../../App";
 import {
   FaRegularHand,
   FaRegularSquare,
@@ -6,8 +6,8 @@ import {
   FaSolidImage,
   FaRegularCircle,
   FaSolidPenNib,
+  FaSolidEraser,
 } from "solid-icons/fa";
-import { FaSolidEraser } from "solid-icons/fa";
 import { setIsSidebarOpened } from "./Sidebar";
 import { BiSolidLockOpen, BiSolidLock, BiRegularText } from "solid-icons/bi";
 import { AiFillHighlight } from "solid-icons/ai";

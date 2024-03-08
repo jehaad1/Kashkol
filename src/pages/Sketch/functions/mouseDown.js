@@ -164,5 +164,24 @@ export default function onMouseDown(x, y, mouseObjects) {
       borderRadius: 0,
     });
   }
+  // else if (tool() === "diamond") {
+  //   return setCurrentObject({
+  //     id,
+  //     zIndex: id,
+  //     x,
+  //     y,
+  //     width: 0,
+  //     height: 0,
+  //     points: [
+  //       { x, y },
+  //       { x, y },
+  //       { x, y },
+  //       { x, y },
+  //     ],
+  //     type: "polygon",
+  //     ...styleProps(),
+  //     borderRadius: 0,
+  //   });
+  // }
   myCanvas.setObject(currentObject());
 }

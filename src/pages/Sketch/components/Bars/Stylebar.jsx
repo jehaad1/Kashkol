@@ -12,8 +12,9 @@ import {
   setObjects,
   objects,
   setHistory,
-} from "../App";
-import ColorPicker from "./ColorPicker";
+} from "../../App";
+import saveObjects from "../../utils/saveObjects";
+import ColorPicker from "../ColorPicker";
 import { setIsSidebarOpened } from "./Sidebar";
 
 export default function Stylebar() {
@@ -43,17 +44,20 @@ export default function Stylebar() {
           items-start justify-center bg-white-950 dark:bg-darkcolor-800
           shadow-lg sm:rounded-lg`}
           >
-            {!["pencil", "pen", "highlighter"].includes(tool()) && (
-              <div
-                class="
+            {Array.isArray(selectedObjects())
+              ? selectedObjects().some((o) => ["line", "path"].includes(o.type))
+              : !["line", "path"].includes(selectedObjects()) &&
+                !["pencil", "pen", "highlighter"].includes(tool()) && (
+                  <div
+                    class="
               flex flex-col gap-3"
-              >
-                <h1 class="text-xs text-darkcolor-800 dark:text-white-950">
-                  Fill
-                </h1>
-                <ColorPicker property={"fill"} />
-              </div>
-            )}
+                  >
+                    <h1 class="text-xs text-darkcolor-800 dark:text-white-950">
+                      Fill
+                    </h1>
+                    {/* <ColorPicker property="fill" /> */}
+                  </div>
+                )}
             <div
               class="
                   flex flex-col gap-3"
@@ -61,7 +65,7 @@ export default function Stylebar() {
               <h1 class="text-xs text-darkcolor-800 dark:text-white-950">
                 Stroke
               </h1>
-              <ColorPicker property="stroke" />
+              {/* <ColorPicker property="stroke" /> */}
             </div>
             <div
               class="
@@ -181,7 +185,7 @@ export default function Stylebar() {
                         };
                       });
                     }
-                    localStorage.setItem("objects", JSON.stringify(objects()));
+                    saveObjects();
                   } else {
                     setStyleProps((props) => ({
                       ...props,
@@ -304,11 +308,11 @@ export default function Stylebar() {
                 />
               </div>
             )}
-            {["rectangle"].includes(tool()) && (
+            {tool() === "cursor" && (
               <div class="grid grid-cols-2 gap-3">
                 <div
                   class="
-                flex flex-col gap-3"
+                  flex flex-col gap-3"
                 >
                   <div
                     class={`${

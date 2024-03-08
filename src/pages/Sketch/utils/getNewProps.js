@@ -1,8 +1,8 @@
 export default function (startPoint, x, y) {
-  const x1 = x < startPoint.x ? x : startPoint.x;
-  const y1 = y < startPoint.y ? y : startPoint.y;
-  const x2 = x > startPoint.x ? x : startPoint.x;
-  const y2 = y > startPoint.y ? y : startPoint.y;
+  const x1 = Math.min(startPoint.x, x);
+  const y1 = Math.min(startPoint.y, y);
+  const x2 = Math.max(startPoint.x, x);
+  const y2 = Math.max(startPoint.y, y);
 
   const width = x2 - x1;
   const height = y2 - y1;

@@ -1,15 +1,15 @@
 import { FaSolidBars } from "solid-icons/fa";
 import { createSignal } from "solid-js";
-import { ToggleDisplayMode, displayMode } from "../../../root";
-import { isDrawing, objects, setSelectedObjects } from "../App";
+import { ToggleDisplayMode, displayMode } from "../../../../root";
+import { isDrawing, objects, setSelectedObjects } from "../../App";
 import { CgSoftwareDownload } from "solid-icons/cg";
 import { FaSolidMoon, FaSolidSun, FaRegularTrashCan } from "solid-icons/fa";
 import { TbFileUpload } from "solid-icons/tb";
 import { TbLogout } from "solid-icons/tb";
 import { BiRegularImageAdd } from "solid-icons/bi";
-import { setPopupVisibility as ExportImagePopup } from "./Popups/ExportImage";
-import { setImportedSketch } from "./Popups/ImportSketch";
-import { setPopupVisibility as ClearSketchPopup } from "./Popups/ClearSketch";
+import { setPopupVisibility as ExportImagePopup } from "../Popups/ExportImage";
+import { setImportedSketch } from "../Popups/ImportSketch";
+import { setPopupVisibility as ClearSketchPopup } from "../Popups/ClearSketch";
 
 export const [isSidebarOpened, setIsSidebarOpened] = createSignal(false);
 export default function Sidebar() {
@@ -39,7 +39,7 @@ export default function Sidebar() {
           >
             <button
               class="
-              rounded-lg outline-none
+              rounded-lg outline-none hover:bg-darkcolor-400/10 transition-colors
               p-3 text-md"
               onClick={() => setIsSidebarOpened(!isSidebarOpened())}
             >

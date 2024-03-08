@@ -7,6 +7,7 @@ import {
   setSelectedObjects,
 } from "../App";
 import { drawDragger } from "../utils/dragger";
+import saveObjects from "../utils/saveObjects";
 
 export default function pasteObjects(objs) {
   const newObjs = objs.map((obj) => {
@@ -26,5 +27,5 @@ export default function pasteObjects(objs) {
     newHistory.push({ action: "add", objects: newObjs, copiedObjects: objs });
     return newHistory;
   });
-  localStorage.setItem("objects", JSON.stringify(objects()));
+  saveObjects();
 }

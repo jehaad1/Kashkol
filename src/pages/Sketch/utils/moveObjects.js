@@ -2,6 +2,8 @@ export default function (myCanvas, objects, newX, newY, mode = "relative") {
   if (objects[0] && Array.isArray(objects[0])) {
     objects = objects[0];
   }
+  console.log(objects);
+
   objects.forEach((obj) => {
     myCanvas.moveObject(obj.id, newX, newY, mode);
   });

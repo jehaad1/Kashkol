@@ -8,6 +8,7 @@ import {
   setStyleProps,
   styleProps,
 } from "../App";
+import saveObjects from "../utils/saveObjects";
 
 export default function ColorPicker(props) {
   const { property } = props;
@@ -98,7 +99,7 @@ export default function ColorPicker(props) {
             return newHistory;
           });
         }
-        localStorage.setItem("objects", JSON.stringify(objects()));
+        saveObjects();
       } else {
         setStyleProps((props) => ({
           ...props,
@@ -167,7 +168,7 @@ export default function ColorPicker(props) {
             return newHistory;
           });
         }
-        localStorage.setItem("objects", JSON.stringify(objects()));
+        saveObjects();
       } else {
         setStyleProps((props) => ({
           ...props,

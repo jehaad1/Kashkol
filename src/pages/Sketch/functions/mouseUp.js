@@ -18,6 +18,7 @@ import {
   selectedObjects,
 } from "../App";
 import moveObjects from "../utils/moveObjects";
+import saveObjects from "../utils/saveObjects";
 
 export let highlighterTimeout, highlighterInterval;
 export default function onMouseUp(x, y) {
@@ -36,7 +37,7 @@ export default function onMouseUp(x, y) {
       newHistory.push({ action: "delete", objects: objs });
       return newHistory;
     });
-    localStorage.setItem("objects", JSON.stringify(objects()));
+    saveObjects();
   }
   if (!currentObject()) return;
   if (tool() === "hand") {
@@ -45,7 +46,7 @@ export default function onMouseUp(x, y) {
       let newY = y - startPoint().y;
       setObjects(moveObjects(myCanvas, objects(), newX, newY));
     }
-    localStorage.setItem("objects", JSON.stringify(objects()));
+    saveObjects();
     setStartPoint([]);
     setCurrentObject(null);
     return;
@@ -95,7 +96,7 @@ export default function onMouseUp(x, y) {
     myCanvas?.deleteObject("selection");
     myCanvas?.deleteObject("selectionBorder");
     setStartPoint([]);
-    localStorage.setItem("objects", JSON.stringify(objects()));
+    saveObjects();
     setCurrentObject(null);
     return;
   }
@@ -145,7 +146,7 @@ export default function onMouseUp(x, y) {
       ...objects.filter((obj) => obj.id !== currentObject().id),
       currentObject(),
     ]);
-    localStorage.setItem("objects", JSON.stringify(objects()));
+    saveObjects();
   }
   setStartPoint([]);
   setCurrentObject(null);

@@ -1,13 +1,13 @@
 import { createEffect, createSignal, onMount } from "solid-js";
-import CanvasFlow from "canvasflow";
+import CanvasFlow from "../../../canvasFlow";
 
 import { isMobile, getTouch, setTouch, getPosition } from "./utils/main";
 import { handleKeyDown, handleResize } from "./events/main";
 
 import "./Sketch.css";
-import Toolbar from "./components/Toolbar";
-import Stylebar from "./components/Stylebar";
-import Sidebar, { setIsSidebarOpened } from "./components/Sidebar";
+import Toolbar from "./components/Bars/Toolbar";
+import Stylebar from "./components/Bars/Stylebar";
+import Sidebar, { setIsSidebarOpened } from "./components/Bars/Sidebar";
 
 import { drawDragger, isCursorOnDragger } from "./utils/dragger";
 import onMouseDown from "./functions/mouseDown";
@@ -17,6 +17,8 @@ import ClearSketchPopup from "./components/Popups/ClearSketch";
 import ExportImagePopup from "./components/Popups/ExportImage";
 import ImportSketchPopup from "./components/Popups/ImportSketch";
 import onMouseClick from "./functions/mouseClick";
+import Zoombar from "./components/Bars/Zoombar";
+import Historybar from "./components/Bars/Historybar";
 
 export const [clearCanvas, setClearCanvas] = createSignal(null);
 export const [tool, setTool] = createSignal("hand");
@@ -260,6 +262,8 @@ export default function App() {
         onFocus={() => setFocused(true)}
       ></textarea> */}
       <Sidebar />
+      <Zoombar />
+      <Historybar />
       <Toolbar
         tool={tool}
         setTool={setTool}

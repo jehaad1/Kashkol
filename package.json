@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@solidjs/router": "^0.8.2",
-    "canvasflow": "^2.1.0",
+    "canvasflow": "^2.3.1",
     "firebase": "^9.23.0",
     "perfect-freehand": "^1.2.0",
     "short-unique-id": "^5.0.3",
