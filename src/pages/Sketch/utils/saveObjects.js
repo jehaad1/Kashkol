@@ -1,4 +1,4 @@
-import { myCanvas } from "../App";
+import { myCanvas, setObjects } from "../App";
 
 export default function saveObjects() {
   const objs = myCanvas
@@ -8,5 +8,6 @@ export default function saveObjects() {
       const { scale, translate, ...rest } = obj;
       return rest;
     });
+  setObjects(objs);
   localStorage.setItem("objects", JSON.stringify(objs));
 }

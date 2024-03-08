@@ -48,14 +48,11 @@ export default function Stylebar() {
               ? selectedObjects().some((o) => ["line", "path"].includes(o.type))
               : !["line", "path"].includes(selectedObjects()) &&
                 !["pencil", "pen", "highlighter"].includes(tool()) && (
-                  <div
-                    class="
-              flex flex-col gap-3"
-                  >
+                  <div class="flex flex-col gap-3">
                     <h1 class="text-xs text-darkcolor-800 dark:text-white-950">
                       Fill
                     </h1>
-                    {/* <ColorPicker property="fill" /> */}
+                    <ColorPicker property="fill" />
                   </div>
                 )}
             <div
@@ -65,134 +62,50 @@ export default function Stylebar() {
               <h1 class="text-xs text-darkcolor-800 dark:text-white-950">
                 Stroke
               </h1>
-              {/* <ColorPicker property="stroke" /> */}
+              <ColorPicker property="stroke" />
             </div>
-            <div
-              class="
-                  flex flex-col gap-1 w-full"
-            >
+            <div class="flex flex-col gap-1 w-full">
               <h1 class="text-xs text-darkcolor-800 dark:text-white-950">
                 Stroke Width
               </h1>
               <input
                 class="outline-none"
                 type="range"
-                title={
-                  selectedObjects()
-                    ? (Array.isArray(selectedObjects())
-                        ? selectedObjects()[0]?.stroke?.width
-                        : selectedObjects()?.stroke?.width) ??
-                      styleProps().stroke.width
-                    : styleProps().stroke.width
-                }
+                title={propertyValue(
+                  "stroke.width",
+                  selectedObjects,
+                  true,
+                  styleProps().stroke.width
+                )}
                 min="0"
                 max="20"
                 step="1"
-                value={
-                  selectedObjects()
-                    ? (Array.isArray(selectedObjects())
-                        ? selectedObjects()[0]?.stroke?.width
-                        : selectedObjects()?.stroke?.width) ??
-                      styleProps().stroke.width
-                    : styleProps().stroke.width
+                value={propertyValue(
+                  "stroke.width",
+                  selectedObjects,
+                  true,
+                  styleProps().stroke.width
+                )}
+                onMouseUp={selectAllText}
+                onTouchEnd={selectAllText}
+                onInput={(e) =>
+                  updateProperty(
+                    "stroke.width",
+                    e.target,
+                    selectedObjects,
+                    true,
+                    styleProps().stroke.width
+                  )
                 }
-                onChange={(e) => {
-                  if (!selectedObjects()) return;
-                  if (Array.isArray(selectedObjects())) {
-                    setHistory((history) => {
-                      const newHistory = [...history];
-                      newHistory.push({
-                        action: "update",
-                        objects: selectedObjects().map((obj) => ({
-                          ...obj,
-                          stroke: { ...obj.stroke, width: +e.target.value },
-                        })),
-                        beforeUpdateObjects: selectedObjects(),
-                      });
-                      return newHistory;
-                    });
-                  } else {
-                    setHistory((history) => {
-                      const newHistory = [...history];
-                      newHistory.push({
-                        action: "update",
-                        objects: [
-                          {
-                            ...selectedObjects(),
-                            stroke: {
-                              ...selectedObjects().stroke,
-                              width: +e.target.value,
-                            },
-                          },
-                        ],
-                        beforeUpdateObjects: [selectedObjects()],
-                      });
-                      return newHistory;
-                    });
-                  }
-                }}
-                onInput={(e) => {
-                  if (selectedObjects()) {
-                    if (Array.isArray(selectedObjects())) {
-                      selectedObjects().forEach((obj) => {
-                        myCanvas.updateObject(obj.id, {
-                          stroke: {
-                            ...obj.stroke,
-                            width: +e.target.value,
-                          },
-                        });
-                        setObjects((objs) => {
-                          const index = objs.findIndex((o) => o.id === obj.id);
-                          objs[index].stroke = {
-                            ...objs[index].stroke,
-                            width: +e.target.value,
-                          };
-                          return [...objs];
-                        });
-                      });
-                      setSelectedObjects((objs) => {
-                        return objs.map((obj) => ({
-                          ...obj,
-                          stroke: {
-                            ...obj.stroke,
-                            width: +e.target.value,
-                          },
-                        }));
-                      });
-                    } else {
-                      const obj = selectedObjects();
-                      myCanvas.updateObject(obj.id, {
-                        stroke: {
-                          ...obj.stroke,
-                          width: +e.target.value,
-                        },
-                      });
-                      setObjects((objs) => {
-                        const index = objs.findIndex((o) => o.id === obj.id);
-                        objs[index].stroke = {
-                          ...obj.stroke,
-                          width: +e.target.value,
-                        };
-                        return [...objs];
-                      });
-                      setSelectedObjects((obj) => {
-                        return {
-                          ...obj,
-                          stroke: {
-                            ...obj.stroke,
-                            width: +e.target.value,
-                          },
-                        };
-                      });
-                    }
-                    saveObjects();
-                  } else {
-                    setStyleProps((props) => ({
-                      ...props,
-                      stroke: { ...props.stroke, width: +e.target.value },
-                    }));
-                  }
-                }}
+                onChange={(e) =>
+                  updateProperty(
+                    "stroke.width",
+                    e.target,
+                    selectedObjects,
+                    true,
+                    styleProps().stroke.width
+                  )
+                }
               />
             </div>
             {tool() !== "highlighter" && (
@@ -206,109 +119,45 @@ export default function Stylebar() {
                 <input
                   class="outline-none"
                   type="range"
-                  title={
-                    selectedObjects()
-                      ? (Array.isArray(selectedObjects())
-                          ? selectedObjects()[0]?.opacity
-                          : selectedObjects()?.opacity) ?? styleProps().opacity
-                      : styleProps().opacity
-                  }
+                  title={propertyValue(
+                    "opacity",
+                    selectedObjects,
+                    true,
+                    myCanvas.defaultValues.get("opacity")
+                  )}
                   min="0"
                   max="1"
                   step="0.05"
-                  value={
-                    selectedObjects()
-                      ? Array.isArray(selectedObjects())
-                        ? selectedObjects()[0]?.opacity
-                        : selectedObjects()?.opacity
-                      : styleProps().opacity
+                  value={propertyValue(
+                    "opacity",
+                    selectedObjects,
+                    true,
+                    styleProps().opacity
+                  )}
+                  onMouseUp={selectAllText}
+                  onTouchEnd={selectAllText}
+                  onInput={(e) =>
+                    updateProperty(
+                      "opacity",
+                      e.target,
+                      selectedObjects,
+                      true,
+                      styleProps().opacity
+                    )
                   }
-                  onChange={(e) => {
-                    if (!selectedObjects()) return;
-                    if (Array.isArray(selectedObjects())) {
-                      setHistory((history) => {
-                        const newHistory = [...history];
-                        newHistory.push({
-                          action: "update",
-                          objects: selectedObjects().map((obj) => ({
-                            ...obj,
-                            opacity: +e.target.value,
-                          })),
-                          beforeUpdateObjects: selectedObjects(),
-                        });
-                        return newHistory;
-                      });
-                    } else {
-                      setHistory((history) => {
-                        const newHistory = [...history];
-                        newHistory.push({
-                          action: "update",
-                          objects: [
-                            {
-                              ...selectedObjects(),
-                              opacity: +e.target.value,
-                            },
-                          ],
-                          beforeUpdateObjects: [selectedObjects()],
-                        });
-                        return newHistory;
-                      });
-                    }
-                  }}
-                  onInput={(e) => {
-                    if (selectedObjects()) {
-                      if (Array.isArray(selectedObjects())) {
-                        selectedObjects().forEach((obj) => {
-                          myCanvas.updateObject(obj.id, {
-                            opacity: +e.target.value,
-                          });
-                          setObjects((objs) => {
-                            const index = objs.findIndex(
-                              (o) => o.id === obj.id
-                            );
-                            objs[index].opacity = +e.target.value;
-                            return [...objs];
-                          });
-                        });
-                        setSelectedObjects((objs) => {
-                          return objs.map((obj) => ({
-                            ...obj,
-                            opacity: +e.target.value,
-                          }));
-                        });
-                      } else {
-                        const obj = selectedObjects();
-                        myCanvas.updateObject(obj.id, {
-                          opacity: +e.target.value,
-                        });
-                        setObjects((objs) => {
-                          const index = objs.findIndex((o) => o.id === obj.id);
-                          objs[index].opacity = +e.target.value;
-                          return [...objs];
-                        });
-                        setSelectedObjects((obj) => {
-                          return {
-                            ...obj,
-                            opacity: +e.target.value,
-                          };
-                        });
-                      }
-                      localStorage.setItem(
-                        "objects",
-                        JSON.stringify(objects())
-                      );
-                    } else {
-                      setStyleProps((props) => ({
-                        ...props,
-                        opacity: +e.target.value,
-                      }));
-                    }
-                  }}
-                  selectedObjects={selectedObjects()}
+                  onChange={(e) =>
+                    updateProperty(
+                      "opacity",
+                      e.target,
+                      selectedObjects,
+                      true,
+                      styleProps().opacity
+                    )
+                  }
                 />
               </div>
             )}
-            {tool() === "cursor" && (
+            {selectedObjects() && tool() === "cursor" && (
               <div class="grid grid-cols-2 gap-3">
                 <div
                   class="
@@ -335,21 +184,26 @@ export default function Stylebar() {
                       </svg>
                     </label>
                     <input
-                      value={"0°"}
+                      value={propertyValue(
+                        "rotation",
+                        selectedObjects,
+                        false,
+                        styleProps().rotation
+                      )}
                       class="bg-transparent inline-block w-[40px] outline-none text-darkcolor-800 dark:text-white-950 text-sm selection:bg-darkcolor-400 selection:text-white-950"
                       type="text"
                       id="rotation"
-                      onChange={(e) => {
-                        const number =
-                          e.target.value.match(/[-+]?[0-9]*\.?[0-9]+/)[0];
-                        if (!number) return (e.target.value = "0°");
-                        const rotation = +number % 360;
-                        setStyleProps((props) => ({
-                          ...props,
-                          rotation,
-                        }));
-                        e.target.value = rotation + "°";
-                      }}
+                      onChange={(e) =>
+                        updateProperty(
+                          "rotation",
+                          e.target,
+                          selectedObjects,
+                          false,
+                          styleProps().rotation
+                        )
+                      }
+                      onMouseUp={selectAllText}
+                      onTouchEnd={selectAllText}
                       onFocus={() => setIsTyping("rotation")}
                       onBlur={() =>
                         isTyping() === "rotation" ? setIsTyping(null) : ""
@@ -359,7 +213,7 @@ export default function Stylebar() {
                 </div>
                 <div
                   class="
-                flex flex-col gap-3"
+                  flex flex-col gap-3"
                 >
                   <div
                     class={`${
@@ -391,21 +245,26 @@ export default function Stylebar() {
                       </svg>
                     </label>
                     <input
-                      value={2}
+                      value={propertyValue(
+                        "borderRadius",
+                        selectedObjects,
+                        false,
+                        styleProps().borderRadius
+                      )}
                       class="bg-transparent inline-block w-[40px] outline-none text-darkcolor-800 dark:text-white-950 text-sm selection:bg-darkcolor-400 selection:text-white-950"
                       type="text"
                       id="borderRadius"
-                      onChange={(e) => {
-                        const number =
-                          e.target.value.match(/[-+]?[0-9]*\.?[0-9]+/)[0];
-                        if (!number) return (e.target.value = "0");
-                        const borderRadius = +number;
-                        setStyleProps((props) => ({
-                          ...props,
-                          borderRadius,
-                        }));
-                        e.target.value = borderRadius;
-                      }}
+                      onChange={(e) =>
+                        updateProperty(
+                          "borderRadius",
+                          e.target,
+                          selectedObjects,
+                          false,
+                          styleProps().borderRadius
+                        )
+                      }
+                      onMouseUp={selectAllText}
+                      onTouchEnd={selectAllText}
                       onFocus={() => setIsTyping("borderRadius")}
                       onBlur={() =>
                         isTyping() === "borderRadius" ? setIsTyping(null) : ""
@@ -420,4 +279,231 @@ export default function Stylebar() {
       )}
     </div>
   );
+}
+
+function updateProperty(
+  propName,
+  target,
+  selectedObjects,
+  isSlider,
+  defaultValue
+) {
+  const number = target.value.match(/[-+]?[0-9]*\.?[0-9]+/);
+  if (!selectedObjects()) {
+    if (!number) return (target.value = defaultValue ?? 0);
+    if (propName.includes(".")) {
+      const [prop, subProp] = propName.split(".");
+      myCanvas.defaultValues.set(prop, {
+        ...myCanvas.defaultValues.get(prop),
+        [subProp]: +number[0],
+      });
+      setStyleProps((props) => {
+        return {
+          ...props,
+          [prop]: {
+            ...props[prop],
+            [subProp]: +number[0],
+          },
+        };
+      });
+    } else {
+      myCanvas.defaultValues.set(propName, +number[0]);
+      setStyleProps((props) => {
+        return {
+          ...props,
+          [propName]: +number[0],
+        };
+      });
+    }
+    return (target.value = +number[0]);
+  }
+  if (!propName.includes(".")) {
+    if (!number)
+      return (target.value = isSlider
+        ? (Array.isArray(selectedObjects())
+            ? Math.min(...selectedObjects().map((o) => o[propName]))
+            : selectedObjects()[propName]) ?? 0
+        : Array.isArray(selectedObjects())
+        ? selectedObjects()
+            .map((o) => o[propName])
+            .every((val, i, arr) => val === arr[0])
+          ? `${selectedObjects()[0][propName]}`
+          : "Mixed"
+        : `${selectedObjects()[propName] ?? 0}`);
+    if (!selectedObjects()) return;
+    const propValue = +number[0];
+
+    if (Array.isArray(selectedObjects())) {
+      selectedObjects().forEach((obj) => {
+        myCanvas.updateObject(obj.id, {
+          [propName]: propValue,
+        });
+      });
+      setHistory((history) => {
+        const newHistory = [...history];
+        newHistory.push({
+          action: "update",
+          objects: selectedObjects().map((obj) => ({
+            ...obj,
+            [propName]: propValue,
+          })),
+          beforeUpdateObjects: selectedObjects(),
+        });
+        return newHistory;
+      });
+      setSelectedObjects((objs) => {
+        return objs.map((obj) => ({
+          ...obj,
+          [propName]: propValue,
+        }));
+      });
+    } else {
+      myCanvas.updateObject(selectedObjects().id, {
+        [propName]: propValue,
+      });
+      setHistory((history) => {
+        const newHistory = [...history];
+        newHistory.push({
+          action: "update",
+          objects: [
+            {
+              ...selectedObjects(),
+              [propName]: propValue,
+            },
+          ],
+          beforeUpdateObjects: [selectedObjects()],
+        });
+        return newHistory;
+      });
+      setSelectedObjects({
+        ...selectedObjects(),
+        [propName]: propValue,
+      });
+    }
+    saveObjects();
+    target.value = propValue;
+  } else {
+    const [prop, subProp] = propName.split(".");
+    if (!number)
+      return (target.value = isSlider
+        ? (Array.isArray(selectedObjects())
+            ? Math.min(...selectedObjects().map((o) => o[prop][subProp]))
+            : selectedObjects()[prop][subProp]) ?? 0
+        : Array.isArray(selectedObjects())
+        ? selectedObjects()
+            .map((o) => o[prop][subProp])
+            .every((val, i, arr) => val === arr[0])
+          ? `${selectedObjects()[0][prop][subProp]}`
+          : "Mixed"
+        : `${selectedObjects()[prop][subProp] ?? 0}`);
+    if (!selectedObjects()) return;
+    const propValue = +number[0];
+    if (Array.isArray(selectedObjects())) {
+      selectedObjects().forEach((obj) => {
+        myCanvas.updateObject(obj.id, {
+          [prop]: {
+            ...obj[prop],
+            [subProp]: propValue,
+          },
+        });
+      });
+      setHistory((history) => {
+        const newHistory = [...history];
+        newHistory.push({
+          action: "update",
+          objects: selectedObjects().map((obj) => ({
+            ...obj,
+            [prop]: {
+              ...obj[prop],
+              [subProp]: propValue,
+            },
+          })),
+          beforeUpdateObjects: selectedObjects(),
+        });
+        return newHistory;
+      });
+      setSelectedObjects((objs) => {
+        return objs.map((obj) => ({
+          ...obj,
+          [prop]: {
+            ...obj[prop],
+            [subProp]: propValue,
+          },
+        }));
+      });
+    } else {
+      myCanvas.updateObject(selectedObjects().id, {
+        [prop]: {
+          ...selectedObjects()[prop],
+          [subProp]: propValue,
+        },
+      });
+      setHistory((history) => {
+        const newHistory = [...history];
+        newHistory.push({
+          action: "update",
+          objects: [
+            {
+              ...selectedObjects(),
+              [prop]: {
+                ...selectedObjects()[prop],
+                [subProp]: propValue,
+              },
+            },
+          ],
+          beforeUpdateObjects: [selectedObjects()],
+        });
+        return newHistory;
+      });
+      setSelectedObjects({
+        ...selectedObjects(),
+        [prop]: {
+          ...selectedObjects()[prop],
+          [subProp]: propValue,
+        },
+      });
+    }
+    saveObjects();
+    target.value = propValue;
+  }
+}
+
+function propertyValue(propName, selectedObjects, isSlider, defaultValue) {
+  if (!selectedObjects()) return defaultValue ?? 0;
+  if (propName.includes(".")) {
+    const [prop, subProp] = propName.split(".");
+    return isSlider
+      ? (Array.isArray(selectedObjects())
+          ? Math.min(
+              ...selectedObjects().map((o) => (o[prop] ? +o[prop][subProp] : 0))
+            )
+          : selectedObjects()[prop][subProp]) ?? 0
+      : Array.isArray(selectedObjects())
+      ? selectedObjects()
+          .map((o) => (o[prop] ? o[prop][subProp] : 0))
+          .every((val, i, arr) => val === arr[0])
+        ? `${
+            selectedObjects()[0][prop] ? selectedObjects()[0][prop][subProp] : 0
+          }`
+        : "Mixed"
+      : `${selectedObjects()[prop] ? selectedObjects()[prop][subProp] : 0}`;
+  }
+  return isSlider
+    ? (Array.isArray(selectedObjects())
+        ? Math.min(...selectedObjects().map((o) => +o[propName]))
+        : selectedObjects()[propName]) ?? 0
+    : Array.isArray(selectedObjects())
+    ? selectedObjects()
+        .map((o) => o[propName])
+        .every((val, i, arr) => val === arr[0])
+      ? `${selectedObjects()[0][propName] ?? 0}`
+      : "Mixed"
+    : `${selectedObjects()[propName] ?? 0}`;
+}
+
+function selectAllText(e) {
+  const selection = window.getSelection().toString();
+  if (isNaN(selection)) {
+    e.target.select();
+  }
 }
